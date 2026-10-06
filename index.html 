@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>USDT Demo Wallet</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#05070b;color:#fff}
+body{padding-bottom:22px}.demo{position:sticky;top:0;z-index:10;background:#ffb51b;color:#171717;text-align:center;font-weight:800;font-size:12px;padding:8px}
+.login{min-height:calc(100vh - 32px);display:grid;place-items:center;padding:24px;background:linear-gradient(180deg,#070a12,#10172a)}
+.loginbox{width:min(390px,100%);background:#121827;border:1px solid #293451;border-radius:24px;padding:30px;box-shadow:0 20px 60px #0008}
+.brand{font-size:34px;font-weight:800;margin-bottom:7px}.sub{color:#aeb8ca;font-size:14px;line-height:1.5;margin-bottom:24px}
+label{display:block;font-size:13px;color:#b8c2d3;margin:12px 0 6px}
+input{width:100%;height:50px;border-radius:12px;border:1px solid #34415d;background:#0a0f1b;color:#fff;padding:0 14px;font-size:16px}
+.loginbtn{width:100%;height:50px;border:0;border-radius:12px;background:#625cff;color:white;font-size:16px;font-weight:700;margin-top:18px}
+.hint{font-size:12px;color:#8894aa;margin-top:14px}
+.error{color:#ff9b9b;font-size:13px;margin-top:10px;min-height:18px}
+.app{display:none}.top{height:76px;background:#060810;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.logo{font-size:29px;font-weight:800}.language{font-size:16px;color:#eee}
+main{max-width:850px;margin:auto;padding:14px}
+.dashboard{background:#2ea27e;border:1px solid #55d1a7;padding:25px 20px 20px}
+.greeting{display:flex;justify-content:space-between;font-size:22px;font-weight:700}.total{text-align:center;margin:52px 0 35px}.totalLabel{font-size:19px}.totalValue{font-size:29px;margin-top:10px}
+.stats{display:flex;text-align:center}.stat{width:50%;font-size:17px}.statValue{font-size:20px;margin-top:10px}
+.art{margin-top:28px;width:100%;height:260px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#f2bf54 0 9%,#1b4f71 10% 22%,#07152e 55%,#020913);position:relative}
+.art:before{content:"₿";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:135px;height:135px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f8d36a,#a06d16);color:#152033;font-size:82px;font-weight:800;box-shadow:0 0 45px #f4c45c}
+.art:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(165deg,transparent 0 18px,#4bc4d022 19px 20px)}
+h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.action{background:#18284c;border-radius:18px;padding:20px 8px;text-align:center;font-size:14px}.ico{width:48px;height:48px;border-radius:50%;background:#655cff;margin:0 auto 12px;display:grid;place-items:center;font-size:25px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);background:#030407;margin:18px -14px -14px;padding:12px 5px 7px}.nav button{border:0;background:transparent;color:#fff;font-size:14px;padding:8px}.nav button:first-child{color:#6f63ff}.logout{margin:16px auto 0;display:block;background:#252d43;color:white;border:0;border-radius:10px;padding:10px 18px}
+@media(max-width:600px){.actions{grid-template-columns:repeat(4,1fr)}.action{padding:14px 3px;font-size:11px}.ico{width:42px;height:42px;font-size:21px}.art{height:220px}.totalValue{font-size:26px}}
+
+.withdrawPanel{margin-top:24px}
+.withdrawPanel[hidden]{display:none}
+.backBtn{border:0;border-radius:10px;background:#252d43;color:#fff;padding:10px 16px;font-size:15px;font-weight:700}
+.withdrawPanel h2{font-size:28px;margin:18px 0}
+.withdrawCard{background:#1d2948;border:1px solid #39486e;border-radius:18px;padding:22px}
+.withdrawCard label{display:block;font-size:17px;font-weight:700;color:#fff;margin:18px 0 8px}
+.withdrawCard input,.withdrawCard select{width:100%;height:54px;border-radius:12px;border:1px solid #c9cdd6;background:#fff;color:#111;padding:0 14px;font-size:16px}
+.withdrawBtn{width:100%;height:54px;border:0;border-radius:12px;background:#625cff;color:#fff;font-size:16px;font-weight:800;margin-top:22px}
+.withdrawMessage{margin-top:16px;min-height:24px;color:#fff;font-weight:700;line-height:1.5}
+.actions .action{border:0;color:#fff;font-family:inherit;cursor:pointer}
+@media(max-width:600px){.withdrawCard{padding:18px}.withdrawPanel h2{font-size:25px}}
+
+</style>
+</head>
+<body>
+
+<section id="login" class="login">
+  <div class="loginbox">
+    <div class="brand">USDT</div>
+    <div class="sub">Demo Wallet Preview<br>Sign in to view the fictional dashboard.</div>
+    <label>Username</label>
+    <input id="username" autocomplete="off" placeholder="Enter username">
+    <label>Password</label>
+    <input id="password" type="password" autocomplete="off" placeholder="Enter password">
+    <button class="loginbtn" onclick="login()">Login</button>
+    <div id="error" class="error"></div>
+</div>
+</section>
+
+<section id="app" class="app">
+<header class="top"><div class="logo">USDT</div><div class="language">English　⌄</div></header>
+<main>
+  <div class="dashboard">
+    <div class="greeting"><span>Hi. DemoUser</span><span>LV5</span></div>
+    <div class="total"><div class="totalLabel">TotalAmount</div><div class="totalValue">2,750,000.00 USDT</div></div>
+    <div class="stats">
+      <div class="stat">Available Balance<div class="statValue">2,585,000.00 USDT</div></div>
+      <div class="stat">Frozen Funds<div class="statValue">165,000.00 USDT</div></div>
+    </div>
+    <div class="art" aria-label="fictional crypto illustration"></div>
+  </div>
+
+  <h2>Quick Actions</h2>
+  <div class="actions">
+    <div class="action"><div class="ico">←</div>Deposit</div>
+    <button id="withdrawAction" class="action" type="button"><div class="ico">⌄</div>Withdraw</button>
+    <div class="action"><div class="ico">◷</div>Transfer</div>
+    <div class="action"><div class="ico">⇩</div>Exchange</div>
+  </div>
+
+
+  <section id="withdrawPanel" class="withdrawPanel" hidden>
+    <button id="backHome" class="backBtn" type="button">← Back</button>
+    <h2>Withdraw</h2>
+    <div class="withdrawCard">
+      <label for="withdrawAddress">Withdrawal Address</label>
+      <input id="withdrawAddress" value="DEMO-ADDRESS-ONLY" aria-label="Demo withdrawal address">
+
+      <label for="withdrawNetwork">Select withdrawal network</label>
+      <select id="withdrawNetwork">
+        <option>TON</option>
+        <option>TRC20</option>
+        <option>ERC20</option>
+      </select>
+
+      <label for="withdrawAmount">Amount</label>
+      <input id="withdrawAmount" inputmode="decimal" type="number" min="0" step="any"
+             placeholder="Enter any amount" aria-describedby="withdrawMessage">
+
+      <button id="withdrawBtn" class="withdrawBtn" type="button">Withdraw</button>
+      <div id="withdrawMessage" class="withdrawMessage" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button>⌂<br>Home</button><button>▢<br>Income</button><button>VIP<br>♛</button><button>☰<br>Profile</button>
+  </div>
+  <button class="logout" onclick="logout()">Log out</button>
+</main>
+</section>
+
+<script>
+function login(){
+  const u=document.getElementById('username').value.trim();
+  const p=document.getElementById('password').value;
+  if(u==='demo' && p==='demo123'){
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('error').textContent='';
+  }else{
+    document.getElementById('error').textContent='Incorrect demo username or password.';
+  }
+}
+function logout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='grid';
+  document.getElementById('password').value='';
+}
+
+const withdrawAction = document.getElementById('withdrawAction');
+const withdrawPanel = document.getElementById('withdrawPanel');
+const backHome = document.getElementById('backHome');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const withdrawAmount = document.getElementById('withdrawAmount');
+const withdrawNetwork = document.getElementById('withdrawNetwork');
+const withdrawMessage = document.getElementById('withdrawMessage');
+
+withdrawAction.addEventListener('click', () => {
+  document.querySelector('.dashboard').style.display = 'none';
+  document.querySelector('h2').style.display = 'none';
+  document.querySelector('.actions').style.display = 'none';
+  withdrawPanel.hidden = false;
+  window.scrollTo(0, 0);
+});
+
+backHome.addEventListener('click', () => {
+  withdrawPanel.hidden = true;
+  document.querySelector('.dashboard').style.display = '';
+  document.querySelector('h2').style.display = '';
+  document.querySelector('.actions').style.display = '';
+  withdrawMessage.textContent = '';
+});
+
+withdrawBtn.addEventListener('click', () => {
+  const amount = Number(withdrawAmount.value);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    withdrawMessage.textContent = 'Enter a valid amount greater than 0 for the demo preview.';
+    return;
+  }
+  const formatted = amount.toLocaleString('en-US', {maximumFractionDigits: 8});
+  withdrawMessage.textContent =
+    `Withdrawal request: ${formatted} USDT via ${withdrawNetwork.value}.`;
+});
+
+</script>
+</body>
+</html>
