@@ -38,7 +38,6 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
 .withdrawCard input,.withdrawCard select{width:100%;height:54px;border-radius:12px;border:1px solid #c9cdd6;background:#fff;color:#111;padding:0 14px;font-size:16px}
 .withdrawBtn{width:100%;height:54px;border:0;border-radius:12px;background:#625cff;color:#fff;font-size:16px;font-weight:800;margin-top:22px}
 .withdrawMessage{margin-top:16px;min-height:24px;color:#fff;font-weight:700;line-height:1.5}
-.demoNote{margin-top:16px;padding:12px;border-left:4px solid #ffb51b;background:#fff7df;color:#7a4300;border-radius:6px;font-size:13px;line-height:1.5}
 .actions .action{border:0;color:#fff;font-family:inherit;cursor:pointer}
 @media(max-width:600px){.withdrawCard{padding:18px}.withdrawPanel h2{font-size:25px}}
 
@@ -100,9 +99,8 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
       <input id="withdrawAmount" inputmode="decimal" type="number" min="0" step="any"
              placeholder="Enter any amount" aria-describedby="withdrawMessage">
 
-      <button id="withdrawBtn" class="withdrawBtn" type="button">Show Withdrawal Preview</button>
+      <button id="withdrawBtn" class="withdrawBtn" type="button">Withdraw</button>
       <div id="withdrawMessage" class="withdrawMessage" aria-live="polite"></div>
-      <div class="demoNote">DEMO / PREVIEW ONLY — NO REAL FUNDS. This button does not send, transfer, or withdraw cryptocurrency.</div>
     </div>
   </section>
 
@@ -110,7 +108,6 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
     <button>⌂<br>Home</button><button>▢<br>Income</button><button>VIP<br>♛</button><button>☰<br>Profile</button>
   </div>
   <button class="logout" onclick="logout()">Log out</button>
-<div style="text-align:center;color:#8f98aa;font-size:11px;margin:14px 0 4px;">DEMO / PREVIEW ONLY — NO REAL FUNDS</div>
 </main>
 </section>
 
@@ -164,7 +161,7 @@ withdrawBtn.addEventListener('click', () => {
   }
   const formatted = amount.toLocaleString('en-US', {maximumFractionDigits: 8});
   withdrawMessage.textContent =
-    `Preview only: ${formatted} USDT via ${withdrawNetwork.value} would be shown as a withdrawal request. Nothing is sent or deducted.`;
+    `Withdrawal request: ${formatted} USDT via ${withdrawNetwork.value}.`;
 });
 
 </script>
