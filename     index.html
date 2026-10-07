@@ -28,10 +28,22 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
 .action{background:#18284c;border-radius:18px;padding:20px 8px;text-align:center;font-size:14px}.ico{width:48px;height:48px;border-radius:50%;background:#655cff;margin:0 auto 12px;display:grid;place-items:center;font-size:25px}
 .nav{display:grid;grid-template-columns:repeat(4,1fr);background:#030407;margin:18px -14px -14px;padding:12px 5px 7px}.nav button{border:0;background:transparent;color:#fff;font-size:14px;padding:8px}.nav button:first-child{color:#6f63ff}.logout{margin:16px auto 0;display:block;background:#252d43;color:white;border:0;border-radius:10px;padding:10px 18px}
 @media(max-width:600px){.actions{grid-template-columns:repeat(4,1fr)}.action{padding:14px 3px;font-size:11px}.ico{width:42px;height:42px;font-size:21px}.art{height:220px}.totalValue{font-size:26px}}
+
+.withdrawPanel{margin-top:24px}
+.withdrawPanel[hidden]{display:none}
+.backBtn{border:0;border-radius:10px;background:#252d43;color:#fff;padding:10px 16px;font-size:15px;font-weight:700}
+.withdrawPanel h2{font-size:28px;margin:18px 0}
+.withdrawCard{background:#1d2948;border:1px solid #39486e;border-radius:18px;padding:22px}
+.withdrawCard label{display:block;font-size:17px;font-weight:700;color:#fff;margin:18px 0 8px}
+.withdrawCard input,.withdrawCard select{width:100%;height:54px;border-radius:12px;border:1px solid #c9cdd6;background:#fff;color:#111;padding:0 14px;font-size:16px}
+.withdrawBtn{width:100%;height:54px;border:0;border-radius:12px;background:#625cff;color:#fff;font-size:16px;font-weight:800;margin-top:22px}
+.withdrawMessage{margin-top:16px;min-height:24px;color:#fff;font-weight:700;line-height:1.5}
+.actions .action{border:0;color:#fff;font-family:inherit;cursor:pointer}
+@media(max-width:600px){.withdrawCard{padding:18px}.withdrawPanel h2{font-size:25px}}
+
 </style>
 </head>
 <body>
-<div class="demo">DEMO / PREVIEW ONLY — NO REAL FUNDS</div>
 
 <section id="login" class="login">
   <div class="loginbox">
@@ -43,8 +55,7 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
     <input id="password" type="password" autocomplete="off" placeholder="Enter password">
     <button class="loginbtn" onclick="login()">Login</button>
     <div id="error" class="error"></div>
-    <div class="hint">Demo credentials: <b>demo</b> / <b>demo123</b></div>
-  </div>
+</div>
 </section>
 
 <section id="app" class="app">
@@ -63,10 +74,37 @@ h2{font-size:32px;margin:24px 0 14px}.actions{display:grid;grid-template-columns
   <h2>Quick Actions</h2>
   <div class="actions">
     <div class="action"><div class="ico">←</div>Deposit</div>
-    <div class="action"><div class="ico">⌄</div>Withdraw</div>
+    <button id="withdrawAction" class="action" type="button"><div class="ico">⌄</div>Withdraw</button>
     <div class="action"><div class="ico">◷</div>Transfer</div>
     <div class="action"><div class="ico">⇩</div>Exchange</div>
   </div>
+
+
+  <section id="withdrawPanel" class="withdrawPanel" hidden>
+    <button id="backHome" class="backBtn" type="button">← Back</button>
+    <h2>Withdraw</h2>
+    <div class="withdrawCard">
+      <label for="withdrawAddress">Withdrawal Address</label>
+      <input id="withdrawAddress" aria-label="Withdrawal address">
+
+      <label for="withdrawalCode">Withdrawal Code</label>
+      <input id="withdrawalCode" aria-label="Withdrawal code">
+
+      <label for="withdrawNetwork">Select withdrawal network</label>
+      <select id="withdrawNetwork">
+        <option>TON</option>
+        <option>TRC20</option>
+        <option>ERC20</option>
+      </select>
+
+      <label for="withdrawAmount">Amount</label>
+      <input id="withdrawAmount" inputmode="decimal" type="number" min="0" step="any"
+             placeholder="Enter any amount" aria-describedby="withdrawMessage">
+
+      <button id="withdrawBtn" class="withdrawBtn" type="button">Withdraw</button>
+      <div id="withdrawMessage" class="withdrawMessage" aria-live="polite"></div>
+    </div>
+  </section>
 
   <div class="nav">
     <button>⌂<br>Home</button><button>▢<br>Income</button><button>VIP<br>♛</button><button>☰<br>Profile</button>
@@ -92,6 +130,42 @@ function logout(){
   document.getElementById('login').style.display='grid';
   document.getElementById('password').value='';
 }
+
+const withdrawAction = document.getElementById('withdrawAction');
+const withdrawPanel = document.getElementById('withdrawPanel');
+const backHome = document.getElementById('backHome');
+const withdrawBtn = document.getElementById('withdrawBtn');
+const withdrawAmount = document.getElementById('withdrawAmount');
+const withdrawNetwork = document.getElementById('withdrawNetwork');
+const withdrawMessage = document.getElementById('withdrawMessage');
+
+withdrawAction.addEventListener('click', () => {
+  document.querySelector('.dashboard').style.display = 'none';
+  document.querySelector('h2').style.display = 'none';
+  document.querySelector('.actions').style.display = 'none';
+  withdrawPanel.hidden = false;
+  window.scrollTo(0, 0);
+});
+
+backHome.addEventListener('click', () => {
+  withdrawPanel.hidden = true;
+  document.querySelector('.dashboard').style.display = '';
+  document.querySelector('h2').style.display = '';
+  document.querySelector('.actions').style.display = '';
+  withdrawMessage.textContent = '';
+});
+
+withdrawBtn.addEventListener('click', () => {
+  const amount = Number(withdrawAmount.value);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    withdrawMessage.textContent = 'Enter a valid amount greater than 0 for the demo preview.';
+    return;
+  }
+  const formatted = amount.toLocaleString('en-US', {maximumFractionDigits: 8});
+  withdrawMessage.textContent =
+    `Withdrawal request: ${formatted} USDT via ${withdrawNetwork.value}.`;
+});
+
 </script>
 </body>
 </html>
